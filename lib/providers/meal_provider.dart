@@ -109,3 +109,4 @@ class MealProvider with ChangeNotifier {
     }
   }
 }
+

@@ -92,3 +92,4 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
     );
   }
 }
+

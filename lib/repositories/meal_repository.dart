@@ -27,3 +27,4 @@ class MealRepository {
     return await _apiService.fetchRandomMeal();
   }
 }
+

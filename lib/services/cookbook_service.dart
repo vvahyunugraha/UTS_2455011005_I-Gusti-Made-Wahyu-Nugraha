@@ -1,3 +1,4 @@
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/saved_recipe_model.dart';
 
 abstract class CookbookService {
@@ -7,6 +8,58 @@ abstract class CookbookService {
   Future<void> deleteRecipe(int id);
 }
 
+/// Implementasi Supabase PostgreSQL Database untuk UTS
+class SupabaseCookbookService implements CookbookService {
+  final SupabaseClient _client = Supabase.instance.client;
+  static const String _tableName = 'my_cookbook';
+
+  @override
+  Future<List<SavedRecipe>> getSavedRecipes() async {
+    final response = await _client
+        .from(_tableName)
+        .select()
+        .order('created_at', ascending: false);
+    return (response as List).map((map) => SavedRecipe.fromMap(map)).toList();
+  }
+
+  @override
+  Future<SavedRecipe> insertRecipe(SavedRecipe recipe) async {
+    final map = recipe.toMap();
+    map.remove('id'); // ID dihasilkan otomatis oleh database PostgreSQL
+
+    final response = await _client
+        .from(_tableName)
+        .insert(map)
+        .select()
+        .single();
+
+    return SavedRecipe.fromMap(response);
+  }
+
+  @override
+  Future<SavedRecipe> updateRecipe(SavedRecipe recipe) async {
+    if (recipe.id == null) {
+      throw Exception('ID resep diperlukan untuk memperbarui data');
+    }
+
+    final map = recipe.toMap();
+    final response = await _client
+        .from(_tableName)
+        .update(map)
+        .eq('id', recipe.id!)
+        .select()
+        .single();
+
+    return SavedRecipe.fromMap(response);
+  }
+
+  @override
+  Future<void> deleteRecipe(int id) async {
+    await _client.from(_tableName).delete().eq('id', id);
+  }
+}
+
+/// Fallback lokal jika kredensial Supabase belum diisi oleh pengguna
 class LocalMockCookbookService implements CookbookService {
   final List<SavedRecipe> _items = [
     SavedRecipe(
@@ -39,7 +92,6 @@ class LocalMockCookbookService implements CookbookService {
 
   @override
   Future<List<SavedRecipe>> getSavedRecipes() async {
-    // Simulasi delay jaringan
     await Future.delayed(const Duration(milliseconds: 300));
     return List.from(_items);
   }

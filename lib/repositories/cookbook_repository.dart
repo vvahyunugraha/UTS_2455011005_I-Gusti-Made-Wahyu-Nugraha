@@ -1,11 +1,15 @@
 import '../models/saved_recipe_model.dart';
 import '../services/cookbook_service.dart';
+import '../config/supabase_config.dart';
 
 class CookbookRepository {
   final CookbookService _service;
 
   CookbookRepository({CookbookService? service})
-      : _service = service ?? LocalMockCookbookService();
+      : _service = service ??
+            (SupabaseConfig.isConfigured
+                ? SupabaseCookbookService()
+                : LocalMockCookbookService());
 
   Future<List<SavedRecipe>> getAllSavedRecipes() async {
     return await _service.getSavedRecipes();
