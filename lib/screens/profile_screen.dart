@@ -72,7 +72,7 @@ class ProfileScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: const Text(
-                          'NIM: 2215101000 | Kelas: TI-5A',
+                          'NIM: 2455011005 | Kelas: TRPL 5A',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 12,
