@@ -6,8 +6,8 @@
 | Data Mahasiswa | Keterangan |
 | :--- | :--- |
 | **Nama** | Wahyu Nugraha |
-| **NIM** | *(Silakan isi NIM Anda)* |
-| **Kelas** | TI-5A *(Silakan sesuaikan)* |
+| **NIM** | 2455011005 |
+| **Kelas** | TRPL 5A |
 | **Tema Project** | Katalog Resep Masakan & Buku Masak Pribadi |
 | **Dosen Pengampu** | Dr. Ir. I Ketut Resika Arthana, S.T., M.Kom |
 | **Teaching Assistant** | Made Yuda Sadewa, S.Pd. |
@@ -163,8 +163,8 @@ Aplikasi memiliki dua kondisi adaptif:
 ### Langkah-Langkah:
 1. **Clone repository ini:**
    ```bash
-   git clone <URL_REPOSITORY_ANDA>
-   cd uts
+   git clone https://github.com/vvahyunugraha/uts-mobileapp-pemob.git
+   cd uts-mobileapp-pemob
    ```
 
 2. **Unduh dependensi project:**
@@ -178,9 +178,25 @@ Aplikasi memiliki dua kondisi adaptif:
    ```
 
 4. **Jalankan aplikasi:**
-   ```bash
-   flutter run
-   ```
+   - **Mode Standar (Fallback Local Mock Database):**
+     ```bash
+     flutter run
+     ```
+   - **Mode Live Database Supabase (Aman tanpa hardcode token di repo):**
+     ```bash
+     flutter run --dart-define=SUPABASE_URL=https://your-project.supabase.co --dart-define=SUPABASE_PUBLISHABLE_KEY=your-publishable-key
+     ```
+
+---
+
+## 🔒 Kepatuhan Keamanan Kredensial (UTS Compliance)
+
+Sesuai aturan keamanan pada pedoman UTS:  
+> *"Dilarang melakukan commit password, private key, service_role key, token rahasia, credential, atau keystore. Jika ditemukan credential sensitif pada repository, mahasiswa wajib segera menghapus dan melakukan rotasi credential."*
+
+1. **Bebas dari Kredensial Rahasia:** Repository ini mematuhi standar keamanan dengan tidak melakukan *hardcode* token/kunci database pada commit publik.
+2. **Fleksibel & Aman:** Menggunakan `String.fromEnvironment` (`--dart-define`) untuk *injeksi* kredensial saat kompilasi/run tanpa menyimpannya ke dalam sistem kontrol versi (Git).
+3. **Resilient Fallback:** Jika dijalankan tanpa parameter `--dart-define`, aplikasi secara otomatis beralih ke penyimpanan lokal (*Mock Service*), sehingga penilai dapat langsung menjalankan dan mendemokan aplikasi tanpa repot mengatur koneksi database manual.
 
 ---
 
