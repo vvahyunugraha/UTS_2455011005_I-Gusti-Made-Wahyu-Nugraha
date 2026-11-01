@@ -15,7 +15,7 @@
 | **Kelas** | **TRPL 5A** |
 | **Nama Project** | **CookCraft** |
 | **Tema Project** | Katalog Resep Masakan Dunia & Buku Masak Pribadi |
-| **URL GitHub Repository** | [https://github.com/vvahyunugraha/uts-mobileapp-pemob](https://github.com/vvahyunugraha/uts-mobileapp-pemob) |
+| **URL GitHub Repository** | [https://github.com/vvahyunugraha/UTS_2455011005_I-Gusti-Made-Wahyu-Nugraha](https://github.com/vvahyunugraha/UTS_2455011005_I-Gusti-Made-Wahyu-Nugraha) |
 | **Branch Utama** | `main` |
 | **Dosen Pengampu** | Dr. Ir. I Ketut Resika Arthana, S.T., M.Kom |
 | **Teaching Assistant** | Made Yuda Sadewa, S.Pd. |
@@ -214,7 +214,7 @@ Sesuai aturan keamanan pada pedoman UTS:
 ### Langkah-Langkah:
 1. **Clone repository ini:**
    ```bash
-   git clone https://github.com/vvahyunugraha/uts-mobileapp-pemob.git
+   git clone https://github.com/vvahyunugraha/UTS_2455011005_I-Gusti-Made-Wahyu-Nugraha.git
    cd uts-mobileapp-pemob
    ```
 
