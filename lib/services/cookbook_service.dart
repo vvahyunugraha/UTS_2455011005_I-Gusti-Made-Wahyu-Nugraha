@@ -10,7 +10,7 @@ abstract class CookbookService {
 
 /// Implementasi Supabase PostgreSQL Database untuk UTS
 class SupabaseCookbookService implements CookbookService {
-  final SupabaseClient _client = Supabase.instance.client;
+  SupabaseClient get _client => Supabase.instance.client;
   static const String _tableName = 'my_cookbook';
 
   @override
