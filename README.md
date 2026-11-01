@@ -1,17 +1,192 @@
-# cookcraft
+# CookCraft - Food Recipe Catalog & Personal Cookbook
 
-A new Flutter project.
+> **Project Ujian Tengah Semester (UTS) - Pemrograman Mobile**  
+> Workshop Pengembangan Aplikasi Mobile  
 
-## Getting Started
+| Data Mahasiswa | Keterangan |
+| :--- | :--- |
+| **Nama** | Wahyu Nugraha |
+| **NIM** | *(Silakan isi NIM Anda)* |
+| **Kelas** | TI-5A *(Silakan sesuaikan)* |
+| **Tema Project** | Katalog Resep Masakan & Buku Masak Pribadi |
+| **Dosen Pengampu** | Dr. Ir. I Ketut Resika Arthana, S.T., M.Kom |
+| **Teaching Assistant** | Made Yuda Sadewa, S.Pd. |
 
-This project is a starting point for a Flutter application.
+---
 
-A few resources to get you started if this is your first Flutter project:
+## 📖 Deskripsi Singkat Project
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+**CookCraft** adalah aplikasi mobile berbasis Flutter yang dirancang untuk membantu pengguna menjelajahi inspirasi kuliner dunia serta mengelola jurnal dan buku resep masakan pribadi. 
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Aplikasi ini mendemonstrasikan integrasi penuh antara **REST API publik** (TheMealDB) untuk data katalog umum dan **Backend Database** (Supabase/PostgreSQL) untuk data personal pengguna (CRUD), dengan arsitektur bersih (*Clean Architecture*), state management (*Provider*), serta antarmuka yang adaptif dan responsif.
+
+---
+
+## ✨ Fitur-Fitur Utama
+
+1. **Dashboard / Beranda (Home):**
+   - Rekomendasi harian (*Meal of The Day*) dengan tampilan hero banner.
+   - Daftar kategori kuliner dengan horizontal slider.
+   - Resep pilihan populer dengan tata letak adaptif.
+   - Fitur *Pull-to-refresh*.
+
+2. **Katalog & Pencarian Resep (Catalog):**
+   - Pencarian resep *real-time* berdasarkan kata kunci melalui REST API.
+   - Filter cepat berdasarkan kategori (*Beef, Chicken, Seafood, Dessert, Pasta*, dll).
+   - Penggantian mode tampilan (*Grid View* vs *List View*).
+   - Penyesuaian kolom otomatis berdasarkan lebar layar (*Responsive Grid*).
+
+3. **Detail Resep Lengkap (Detail):**
+   - Foto kuliner resolusi tinggi dengan *SliverAppBar*.
+   - Badge kategori, asal negara (*Area*), dan label tags.
+   - Rincian takaran dan daftar bahan masakan (*Ingredients & Measures*).
+   - Langkah-langkah instruksi memasak lengkap.
+   - Tombol aksi langsung ke form penyimpanan buku resep.
+
+4. **Buku Resep Pribadi (My Cookbook - CRUD):**
+   - **Create:** Form penyimpanan resep dengan validasi input, tingkat kesulitan, status masak, rating kepuasan, dan tips rahasia.
+   - **Read:** Menampilkan daftar koleksi masakan tersimpan dengan filter status (*Ingin Dicoba, Sudah Dimasak, Favorit*).
+   - **Update:** Pengeditan status, rating kepuasan, tingkat kesulitan, dan tips memasak.
+   - **Delete:** Penghapusan resep dari koleksi dilengkapi dialog konfirmasi (*Confirmation AlertDialog*) dan *SnackBar feedback*.
+
+5. **Profil Pengembang (Profile):**
+   - Identitas mahasiswa (Nama, NIM, Kelas).
+   - Dasbor ringkasan statistik koleksi resep pengguna.
+   - Checklist pemenuhan spesifikasi teknis UTS.
+
+---
+
+## 🛠️ Tech Stack & Dependencies
+
+- **Framework:** [Flutter](https://flutter.dev/) (SDK ^3.11.4)
+- **Language:** [Dart](https://dart.dev/) (Null-safety enabled)
+- **State Management:** `provider` (^6.1.5)
+- **Networking / REST API:** `http` (^1.6.0)
+- **Backend Database:** Supabase / PostgreSQL (Ready via Repository Pattern)
+- **Design System:** Material Design 3
+
+---
+
+## 🌐 Sumber Data & API
+
+1. **REST API (Data Publik & Katalog):**
+   - Provider: **TheMealDB API** (`https://www.themealdb.com/api/json/v1/1/`)
+   - Operasi: **GET**
+   - Endpoints:
+     - `/search.php?s={query}` : Mencari katalog resep
+     - `/categories.php` : Mengambil seluruh kategori masakan
+     - `/filter.php?c={category}` : Memfilter resep berdasarkan kategori
+     - `/lookup.php?i={id}` : Mengambil detail resep & bahan
+     - `/random.php` : Mengambil rekomendasi resep harian
+
+2. **Backend Database (Data Personal Pengguna):**
+   - Database: **Supabase / PostgreSQL**
+   - Nama Tabel: `my_cookbook`
+   - Skema Tabel:
+     - `id` (BIGINT, Primary Key)
+     - `meal_id` (TEXT)
+     - `meal_name` (TEXT)
+     - `category` (TEXT)
+     - `thumbnail_url` (TEXT)
+     - `difficulty_level` (TEXT)
+     - `cook_status` (TEXT)
+     - `rating` (NUMERIC)
+     - `personal_tips` (TEXT)
+     - `created_at` (TIMESTAMPTZ)
+
+---
+
+## 🏗️ Struktur Arsitektur Aplikasi
+
+Mengikuti kaidah arsitektur berlapis (*Clean Architecture*):  
+`UI (Screens & Widgets) ➔ State (Providers) ➔ Repositories ➔ Services / Data Sources ➔ REST API / Database`
+
+```text
+lib/
+├── models/
+│   ├── meal_model.dart            # Model JSON dari REST API
+│   └── saved_recipe_model.dart    # Model Data untuk Database
+├── services/
+│   ├── meal_api_service.dart      # HTTP Service komunikasi dengan REST API
+│   └── cookbook_service.dart      # Service CRUD Database
+├── repositories/
+│   ├── meal_repository.dart       # Abstraksi repositori katalog
+│   └── cookbook_repository.dart   # Abstraksi repositori buku resep
+├── providers/
+│   ├── meal_provider.dart         # Provider katalog resep, kategori, dan pencarian
+│   └── cookbook_provider.dart     # Provider operasi CRUD dan filter buku resep
+├── screens/
+│   ├── main_navigation_screen.dart # Navigasi utama (NavigationBar & NavigationRail responsif)
+│   ├── home_screen.dart           # Layar Beranda & Rekomendasi
+│   ├── recipe_catalog_screen.dart # Layar Katalog & Pencarian (Grid/List)
+│   ├── recipe_detail_screen.dart  # Layar Detail Resep & Bahan
+│   ├── add_recipe_screen.dart     # Form Tambah Resep (Validasi input)
+│   ├── edit_recipe_screen.dart    # Form Edit Resep (Validasi input)
+│   ├── my_cookbook_screen.dart    # Layar Buku Resep Tersimpan (CRUD)
+│   └── profile_screen.dart        # Layar Profil Mahasiswa & Statistik
+├── widgets/
+│   ├── recipe_card.dart           # Custom Reusable Card Resep
+│   ├── status_badge.dart          # Custom Reusable Badge Status/Kesulitan
+│   ├── custom_search_bar.dart     # Custom Reusable Search Bar
+│   └── state_feedback_widgets.dart# Custom Loading, Empty, dan Error States
+└── main.dart                      # Entry point, Theme M3, & MultiProvider
+```
+
+---
+
+## 📱 Desain Responsif (Responsive Layout)
+
+Aplikasi memiliki dua kondisi adaptif:
+1. **Compact Mode (Smartphone portrait, width < 600–700px):**
+   - Navigasi bawah menggunakan `NavigationBar`.
+   - Grid katalog menampilkan 2 kolom.
+2. **Wide Mode (Tablet / Landscape / Desktop, width ≥ 700px):**
+   - Navigasi berpindah ke sisi samping kiri menggunakan `NavigationRail`.
+   - Grid katalog otomatis menyesuaikan menjadi 3–4 kolom.
+
+---
+
+## 🚀 Cara Menjalankan Project
+
+### Prasyarat
+- Flutter SDK (versi 3.10.0 atau lebih baru)
+- Perangkat Android (Emulator / HP Fisik) atau Chrome Browser
+
+### Langkah-Langkah:
+1. **Clone repository ini:**
+   ```bash
+   git clone <URL_REPOSITORY_ANDA>
+   cd uts
+   ```
+
+2. **Unduh dependensi project:**
+   ```bash
+   flutter pub get
+   ```
+
+3. **Jalankan analisis kode untuk memastikan tidak ada error:**
+   ```bash
+   flutter analyze
+   ```
+
+4. **Jalankan aplikasi:**
+   ```bash
+   flutter run
+   ```
+
+---
+
+## 📋 Checklist Pemenuhan Spesifikasi UTS
+
+| Komponen | Spesifikasi Minimum | Status |
+| :--- | :--- | :---: |
+| Screen Fungsional | Minimal 6 Screen (Home, Catalog, Detail, Add, Edit, Saved, Profile) | ✅ (7 Screen) |
+| Dart Model | Minimal 2 Model (`Meal`, `SavedRecipe`) | ✅ |
+| Reusable Widget | Minimal 3 Reusable Widgets (`RecipeCard`, `StatusBadge`, `CustomSearchBar`, `StateFeedbacks`) | ✅ (4 Widget) |
+| Responsive Layout | Minimal 2 kondisi (Compact vs Wide via Layout/MediaQuery) | ✅ |
+| REST API | GET request terintegrasi ke UI (`TheMealDB`) | ✅ |
+| Database CRUD | 4 Operasi: Create, Read, Update, Delete (dengan dialog konfirmasi) | ✅ |
+| State Management | Provider + ChangeNotifier (MultiProvider) | ✅ |
+| Form & Validation | Form validasi input (Add & Edit Screen) | ✅ |
+| User Feedback | SnackBar, AlertDialog, Loading, Error, & Empty states | ✅ |
+| Git Commits | Minimal 16 meaningful commits bertahap | ✅ |
